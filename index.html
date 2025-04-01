@@ -1,293 +1,291 @@
 <!DOCTYPE html><html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pixel Art Editor</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            display: flex;
-            gap: 30px;
-        }#controls {
-        margin-bottom: 20px;
-    }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixel Art Editor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }#controls {
+  margin-bottom: 20px;
+}
 
-    #convertBtn, .copyBtn, #savePdfBtn, #selectSectionBtn {
-        padding: 10px 20px;
-        background: #4CAF50;
-        color: white;
-        border: none;
-        cursor: pointer;
-        margin-top: 10px;
-    }
+#convertBtn {
+  padding: 10px 20px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+}
 
-    #imagePreview {
-        max-width: 300px;
-        max-height: 300px;
-        border: 1px solid #ccc;
-        margin-bottom: 10px;
-    }
+.gridWrapper {
+  display: grid;
+  gap: 20px;
+}
 
-    #pixelContainer {
-        display: grid;
-        gap: 1px;
-    }
+.resultBlock {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
 
-    .pixel {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 10px;
-        color: white;
-        width: 10px;
-        height: 10px;
-        border: 1px solid #000;
-        transition: background 0.2s;
-    }
+.pixelContainer {
+  display: grid;
+  gap: 1px;
+  margin-bottom: 10px;
+}
 
-    #colorList, #pixelOrder {
-        max-height: 500px;
-        overflow-y: auto;
-        padding-top: 10px;
-    }
+.pixel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: white;
+  width: 10px;
+  height: 10px;
+  border: 1px solid #000;
+}
 
-    #statusMessage {
-        margin-top: 10px;
-        font-weight: bold;
-        color: #4CAF50;
-        display: none;
-    }
-</style>
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 10px;
+}
 
+th, td {
+  border: 1px solid #ccc;
+  padding: 5px;
+  text-align: center;
+}
+
+h3 {
+  text-align: center;
+  margin: 5px 0;
+}
+
+  </style>
 </head>
 <body>
-    <div>
-        <h1>Pixel Art Converter</h1>
-        <div id="controls">
-            <input type="file" id="imageInput" accept="image/*"><br>
-            <img id="imagePreview">
-            <br>
-            <label>عدد الأقسام:</label>
-            <select id="sectionCount">
-                <option value="1">1</option>
-                <option value="4">4</option>
-                <option value="8">8</option>
-                <option value="16">16</option>
-            </select>
-            <button id="selectSectionBtn" disabled>اختيار القسم</button>
-            <br>
-            <label>عرض الشبكة:</label>
-            <input type="number" id="gridWidth" min="1" value="20">
-            <label>ارتفاع الشبكة:</label>
-            <input type="number" id="gridHeight" min="1" value="20">
-            <br>
-            <button id="convertBtn" disabled>تحويل الصورة</button>
-            <button id="savePdfBtn" disabled>حفظ الصورة بصيغة PDF</button>
-            <div id="statusMessage">جارٍ تحويل الصورة...</div>
-        </div>
-        <div id="pixelContainer"></div>
-    </div><div>
-    <h2>لوحة الألوان</h2>
-    <button class="copyBtn" onclick="copyText('colorList')">📋 نسخ الألوان</button>
-    <div id="colorList"></div>
+<h1>La mosaïque moderne
 
-    <h3>ترتيب البكسلات</h3>
-    <button class="copyBtn" onclick="copyText('pixelOrder')">📋 نسخ الترتيب</button>
-    <div id="pixelOrder"></div>
-</div>
+</h1>
+<p>يفضَّل أن تكون الصورة مربعة، وإذا كنت تستخدم الهاتف، ففعّل وضع الموقع المخصص لأجهزة الكمبيوتر.
+</p>
+<p>:
+Il est préférable que l'image soit carrée. Si vous utilisez un téléphone, activez le mode site pour ordinateur.
+</p>
+<div id="controls">
+  <input type="file" id="imageInput" accept="image/*"><br>
+  <img id="imagePreview" style="max-width:300px; display:none;">
+  <br>
+  <label>عدد الأقسام:</label>
+  <select id="sectionCount">
+    <option value="1">1</option>
+    <option value="4">4</option>
+    <option value="8">8</option>
+    <option value="16">16</option>
+  </select>
+  <br>
+  <label>عرض الشبكة:</label>
+  <input type="number" id="gridWidth" min="1" value="20">
+  <label>ارتفاع الشبكة:</label>
+  <input type="number" id="gridHeight" min="1" value="20">
+  <br><br>
+  <label>اختر اللون الثاني:</label>
+  <input type="color" id="color2" value="#000000">
+  <br>
+  <button id="convertBtn" disabled>تحويل الصورة باستخدام تدرج الأبيض واللون الثاني</button>
+</div><div id="results"></div><script>
+  let originalImage;
+  let blendMap = {};
+  let blockCounter = 1;
+  let hasConverted = false;
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script>
-    let originalImage;
-    let pixelSize = 20;
-    let colorMap = new Map();
-    let lastHoveredPixel = null;
-    let cropper;
-    let croppedCanvas;
-    let selectedSectionIndex = 0;
+  document.getElementById('imageInput').addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      originalImage = new Image();
+      originalImage.onload = function () {
+        document.getElementById('imagePreview').src = originalImage.src;
+        document.getElementById('imagePreview').style.display = 'block';
+        document.getElementById('convertBtn').disabled = false;
+        hasConverted = false;
+      };
+      originalImage.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
 
-    document.getElementById('imageInput').addEventListener('change', function (e) {
-        const file = e.target.files[0];
-        if (!file) return;
+  document.getElementById('convertBtn').addEventListener('click', function () {
+    if (hasConverted) return;
+    hasConverted = true;
+    this.disabled = true;
 
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            originalImage = new Image();
-            originalImage.onload = function () {
-                const preview = document.getElementById('imagePreview');
-                preview.src = originalImage.src;
-                preview.style.display = 'block';
+    const gridWidth = parseInt(document.getElementById('gridWidth').value);
+    const gridHeight = parseInt(document.getElementById('gridHeight').value);
+    const sectionCount = parseInt(document.getElementById('sectionCount').value);
 
-                if (cropper) cropper.destroy();
-                cropper = new Cropper(preview, {
-                    viewMode: 1,
-                    aspectRatio: 1,
-                    movable: true,
-                    zoomable: true,
-                    cropBoxMovable: true,
-                    cropBoxResizable: true,
-                });
+    const white = [255, 255, 255];
+    const c2 = hexToRgb(document.getElementById('color2').value);
+    const palette = generateGradient(white, c2, 10);
 
-                document.getElementById('selectSectionBtn').disabled = false;
-            };
-            originalImage.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
+    blendMap = {};
+    palette.forEach((color, index) => {
+      const hex = rgbToHex(...color);
+      const percentWhite = ((9 - index) / 9 * 100).toFixed(0);
+      const percentColor = (100 - percentWhite);
+      blendMap[hex] = `${percentWhite}% أبيض + ${percentColor}% لون مختار`;
     });
 
-    document.getElementById('selectSectionBtn').addEventListener('click', function () {
-        croppedCanvas = cropper.getCroppedCanvas();
-        const sections = parseInt(document.getElementById('sectionCount').value);
+    const sqrt = Math.sqrt(sectionCount);
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = originalImage.width;
+    canvas.height = originalImage.height;
+    ctx.drawImage(originalImage, 0, 0);
 
-        selectedSectionIndex = parseInt(prompt(`اختر رقم القسم (من 1 إلى ${sections}):`)) - 1;
-        const sqrt = Math.sqrt(sections);
-        const sectionWidth = croppedCanvas.width / sqrt;
-        const sectionHeight = croppedCanvas.height / sqrt;
+    const sectionWidth = canvas.width / sqrt;
+    const sectionHeight = canvas.height / sqrt;
 
-        const x = (selectedSectionIndex % sqrt) * sectionWidth;
-        const y = Math.floor(selectedSectionIndex / sqrt) * sectionHeight;
+    const results = document.getElementById('results');
+    results.innerHTML = '';
+    blockCounter = 1;
 
-        const ctx = croppedCanvas.getContext('2d');
+    const gridWrapper = document.createElement('div');
+    gridWrapper.className = 'gridWrapper';
+    gridWrapper.style.gridTemplateColumns = `repeat(${sqrt}, 1fr)`;
+
+    for (let i = 0; i < sqrt; i++) {
+      for (let j = 0; j < sqrt; j++) {
+        const x = j * sectionWidth;
+        const y = i * sectionHeight;
+
         const imageData = ctx.getImageData(x, y, sectionWidth, sectionHeight);
+        const tempCanvas = document.createElement('canvas');
+        const tempCtx = tempCanvas.getContext('2d');
+        tempCanvas.width = sectionWidth;
+        tempCanvas.height = sectionHeight;
+        tempCtx.putImageData(imageData, 0, 0);
 
-        const finalCanvas = document.createElement('canvas');
-        finalCanvas.width = sectionWidth;
-        finalCanvas.height = sectionHeight;
-        finalCanvas.getContext('2d').putImageData(imageData, 0, 0);
+        const partImage = new Image();
+        partImage.src = tempCanvas.toDataURL();
 
-        originalImage = new Image();
-        originalImage.onload = function () {
-            document.getElementById('convertBtn').disabled = false;
-            document.getElementById('imagePreview').src = originalImage.src;
-        };
-        originalImage.src = finalCanvas.toDataURL();
-    });
+        partImage.onload = function () {
+          const scaledCanvas = document.createElement('canvas');
+          const scaledCtx = scaledCanvas.getContext('2d');
+          scaledCanvas.width = gridWidth;
+          scaledCanvas.height = gridHeight;
+          scaledCtx.drawImage(partImage, 0, 0, gridWidth, gridHeight);
 
-    document.getElementById('convertBtn').addEventListener('click', function () {
-        const status = document.getElementById('statusMessage');
-        status.style.display = 'block';
-        status.style.color = '#4CAF50';
-        status.innerText = 'جارٍ تحويل الصورة...';
-
-        setTimeout(() => {
-            processImage();
-            status.innerText = 'تم التحويل بنجاح!';
-        }, 1000); // محاكاة وقت التحويل
-    });
-
-    document.getElementById('savePdfBtn').addEventListener('click', saveAsPDF);
-
-    function processImage() {
-        if (!originalImage) return;
-
-        const gridWidth = parseInt(document.getElementById('gridWidth').value);
-        const gridHeight = parseInt(document.getElementById('gridHeight').value);
-
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-
-        canvas.width = gridWidth;
-        canvas.height = gridHeight;
-        ctx.drawImage(originalImage, 0, 0, gridWidth, gridHeight);
-
-        let pixels = [];
-        for (let y = 0; y < gridHeight; y++) {
+          let pixels = [];
+          for (let y = 0; y < gridHeight; y++) {
             for (let x = 0; x < gridWidth; x++) {
-                const pixelData = ctx.getImageData(x, y, 1, 1).data;
-                pixels.push([pixelData[0], pixelData[1], pixelData[2]]);
+              const data = scaledCtx.getImageData(x, y, 1, 1).data;
+              pixels.push([data[0], data[1], data[2]]);
             }
-        }
+          }
 
-        const reducedColors = pixels.map(([r, g, b]) => rgbToHex(r, g, b));
-        renderPixels(gridWidth, gridHeight, reducedColors);
+          const mappedPixels = pixels.map((px) => {
+            const closest = findClosestColor(px, palette);
+            return rgbToHex(...closest);
+          });
+
+          renderResult(gridWrapper, gridWidth, mappedPixels);
+        };
+      }
     }
+    results.appendChild(gridWrapper);
+  });
 
-    function renderPixels(gridWidth, gridHeight, pixels) {
-        const container = document.getElementById('pixelContainer');
-        container.innerHTML = '';
-        container.style.gridTemplateColumns = `repeat(${gridWidth}, ${pixelSize}px)`;
+  function renderResult(wrapper, gridWidth, pixels) {
+    const colorMap = new Map();
+    const container = document.createElement('div');
+    container.className = 'pixelContainer';
+    container.style.gridTemplateColumns = `repeat(${gridWidth}, 10px)`;
 
-        colorMap.clear();
-        let pixelOrderList = [];
+    pixels.forEach((hex) => {
+      if (!colorMap.has(hex)) {
+        colorMap.set(hex, { number: colorMap.size + 1, count: 0 });
+      }
+      colorMap.get(hex).count++;
+      const colorData = colorMap.get(hex);
+      const div = document.createElement('div');
+      div.className = 'pixel';
+      div.style.backgroundColor = hex;
+      div.textContent = colorData.number;
+      container.appendChild(div);
+    });
 
-        pixels.forEach((hexColor, index) => {
-            if (!colorMap.has(hexColor)) {
-                colorMap.set(hexColor, { number: colorMap.size + 1, count: 0 });
-            }
-            colorMap.get(hexColor).count++;
+    const table = document.createElement('table');
+    const thead = document.createElement('thead');
+    thead.innerHTML = `<tr><th>رقم</th><th>كود اللون</th><th>عدد البكسلات</th><th>الدمج</th></tr>`;
+    const tbody = document.createElement('tbody');
 
-            const pixelDiv = document.createElement('div');
-            pixelDiv.className = 'pixel';
-            pixelDiv.style.backgroundColor = hexColor;
-            pixelDiv.textContent = colorMap.get(hexColor).number;
-            pixelDiv.dataset.originalColor = hexColor;
+    [...colorMap.entries()].forEach(([hex, data]) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${data.number}</td><td>${hex}</td><td>${data.count}</td><td>${blendMap[hex]}</td>`;
+      tbody.appendChild(tr);
+    });
 
-            pixelDiv.addEventListener('mouseover', function () {
-                if (lastHoveredPixel) lastHoveredPixel.style.backgroundColor = lastHoveredPixel.dataset.originalColor;
-                this.style.backgroundColor = 'red';
-                lastHoveredPixel = this;
-            });
+    const totalColorsRow = document.createElement('tr');
+    totalColorsRow.innerHTML = `<td colspan="4"><strong>عدد الألوان في الصورة: ${colorMap.size}</strong></td>`;
+    tbody.appendChild(totalColorsRow);
 
-            container.appendChild(pixelDiv);
+    table.appendChild(thead);
+    table.appendChild(tbody);
 
-            let x = (index % gridWidth) + 1;
-            let y = Math.floor(index / gridWidth) + 1;
-            pixelOrderList.push(`(${x}, ${y}): لون ${colorMap.get(hexColor).number}`);
-        });
+    const block = document.createElement('div');
+    block.className = 'resultBlock';
+    const title = document.createElement('h3');
+    title.textContent = `صورة رقم ${blockCounter++}`;
+    block.appendChild(title);
+    block.appendChild(container);
+    block.appendChild(table);
 
-        updateColorList();
-        updatePixelOrder(pixelOrderList);
-        document.getElementById('savePdfBtn').disabled = false;
+    wrapper.appendChild(block);
+  }
+
+  function rgbToHex(r, g, b) {
+    return "#" + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('').toUpperCase();
+  }
+
+  function hexToRgb(hex) {
+    const bigint = parseInt(hex.replace('#', ''), 16);
+    return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
+  }
+
+  function generateGradient(c1, c2, steps) {
+    const result = [];
+    for (let i = 0; i < steps; i++) {
+      const ratio = i / (steps - 1);
+      const r = Math.round(c1[0] + (c2[0] - c1[0]) * ratio);
+      const g = Math.round(c1[1] + (c2[1] - c1[1]) * ratio);
+      const b = Math.round(c1[2] + (c2[2] - c1[2]) * ratio);
+      result.push([r, g, b]);
     }
+    return result;
+  }
 
-    function updateColorList() {
-        document.getElementById('colorList').innerText = [...colorMap.entries()]
-            .map(([hex, data]) => `${data.number}: ${hex} - ${data.count} بكسل`).join('\n');
+  function findClosestColor(target, palette) {
+    let minDist = Infinity;
+    let closest = palette[0];
+    for (const color of palette) {
+      const dist = Math.sqrt(
+        (target[0] - color[0]) ** 2 +
+        (target[1] - color[1]) ** 2 +
+        (target[2] - color[2]) ** 2
+      );
+      if (dist < minDist) {
+        minDist = dist;
+        closest = color;
+      }
     }
-
-    function updatePixelOrder(pixelOrderList) {
-        document.getElementById('pixelOrder').innerText = pixelOrderList.join('\n');
-    }
-
-    function copyText(id) {
-        navigator.clipboard.writeText(document.getElementById(id).innerText).then(() => alert("تم النسخ!"));
-    }
-
-    function rgbToHex(r, g, b) {
-        return `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1).toUpperCase()}`;
-    }
-
-    function saveAsPDF() {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-
-        const gridWidth = parseInt(document.getElementById('gridWidth').value);
-        const gridHeight = parseInt(document.getElementById('gridHeight').value);
-
-        canvas.width = gridWidth * pixelSize;
-        canvas.height = gridHeight * pixelSize;
-
-        const container = document.getElementById('pixelContainer');
-        container.querySelectorAll('.pixel').forEach((pixel, index) => {
-            let color = pixel.style.backgroundColor;
-            let x = (index % gridWidth) * pixelSize;
-            let y = Math.floor(index / gridWidth) * pixelSize;
-            ctx.fillStyle = color;
-            ctx.fillRect(x, y, pixelSize, pixelSize);
-        });
-
-        doc.addImage(canvas, 'PNG', 10, 10, 180, 180);
-        doc.save('pixel_art.pdf');
-    }
-</script>
-
-</body>
+    return closest;
+  }
+</script></body>
 </html>
