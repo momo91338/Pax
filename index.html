@@ -1,313 +1,338 @@
-<!DOCTYPE html><html lang="ar">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pixel Art Editor</title>
+  <title>محول الصور إلى بكسل</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-    }#controls {
-  margin-bottom: 20px;
-}
-
-#convertBtn {
-  padding: 10px 20px;
-  background: #4CAF50;
-  color: white;
-  border: none;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.gridWrapper {
-  display: grid;
-  gap: 20px;
-}
-
-.resultBlock {
-  border: 1px solid #ccc;
-  padding: 10px;
-}
-
-.pixelContainer {
-  display: grid;
-  gap: 1px;
-  margin-bottom: 10px;
-}
-
-.pixel {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  color: white;
-  width: 10px;
-  height: 10px;
-  border: 1px solid #000;
-}
-
-table {
-  border-collapse: collapse;
-  width: 100%;
-  margin-top: 10px;
-}
-
-th, td {
-  border: 1px solid #ccc;
-  padding: 5px;
-  text-align: center;
-}
-
-h3 {
-  text-align: center;
-  margin: 5px 0;
-}
-
+    .pixel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      border: 1px solid #ccc;
+    }
+    .pixelContainer {
+      display: grid;
+      gap: 1px;
+      overflow: auto;
+      border: 2px solid #333;
+      padding: 2px;
+      max-width: 100%;
+      max-height: 100%;
+    }
+    .sectionWrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
   </style>
 </head>
-<body>
-<h1>La mosaïque moderne
+<body class="bg-gray-100 p-4">
+  <div class="max-w-6xl mx-auto">
+    <!-- Info Section -->
+<section class="bg-white p-6 rounded shadow mb-6">
+  <h2 class="text-2xl font-bold mb-4 text-center">What Does This Page Do?</h2>
+  <p class="mb-4">
+    This tool converts an image into a <strong>pixelated design divided into sections</strong>, ideal for:
+  </p>
+  <ul class="list-disc pl-5 mb-4">
+    <li>Hand embroidery patterns</li>
+    <li>Paper or pixel art</li>
+    <li>Mosaic designs</li>
+    <li>Any project that needs a simplified grid-based version of an image</li>
+  </ul>
 
-</h1>
-<
-<p>يفضَّل أن تكون الصورة مربعة، وإذا كنت تستخدم الهاتف، ففعّل وضع الموقع المخصص لأجهزة الكمبيوتر.
-</p>
-<h2>ما هو هذا الموقع؟</h2>
-<p>
-هذا الموقع يساعدك على تحويل أي صورة إلى تصميم بكسلي باستخدام ألوان مستخلصة من تدرج بين الأبيض ولون آخر تقوم باختياره. مثالي للفنون اليدوية مثل التطريز أو اللوحات الشبكيةاو الفسيفساء.
-</p>
+  <h3 class="text-xl font-semibold mb-2">How It Works</h3>
+  <ol class="list-decimal pl-5 mb-4 space-y-2">
+    <li><strong>Upload an Image:</strong> Choose an image from your device to preview it.</li>
+    <li><strong>Set Your Preferences:</strong>
+      <ul class="list-disc pl-5">
+        <li><strong>Number of Sections:</strong> Split the image into 1, 4, 9, 16, or 25 parts.</li>
+        <li><strong>Number of Colors:</strong> Limit the number of used colors (for easier crafting).</li>
+        <li><strong>Grid Size:</strong> Controls the resolution of each section.</li>
+        <li><strong>Second Color:</strong> The tool generates a gradient from white to this color.</li>
+      </ul>
+    </li>
+    <li><strong>Convert the Image:</strong> The image is split, pixelated, and colors are reduced. A color chart is generated showing:
+      <ul class="list-disc pl-5">
+        <li>Color number</li>
+        <li>HEX code</li>
+        <li>Mix with white</li>
+        <li>Color usage count</li>
+      </ul>
+    </li>
+  </ol>
 
-<h3>طريقة الاستخدام:</h3>
-<p>
-1. حمّل صورة من جهازك.<br>
-2. اختر عدد أقسام الصورة (1، 4، 8، 16).<br>
-3. حدد حجم الشبكة (عدد البكسلات عرضاً وارتفاعاً).<br>
-4. اختر اللون الثاني، الأبيض ثابت.<br>
-5. اضغط على \"تحويل الصورة\" لرؤية النتائج.
-</p>
+  <h3 class="text-xl font-semibold mb-2">Why Use This Tool?</h3>
+  <ul class="list-disc pl-5">
+    <li>Easy to recreate designs by hand</li>
+    <li>Clear color table</li>
+    <li>Divides large designs into manageable sections</li>
+  </ul>
+</section>
+    <h1 class="text-3xl font-bold text-center mb-4">محول الصور إلى بكسل</h1>
+    <input type="file" id="imageInput" accept="image/*" class="block mb-4">
+    <img id="imagePreview" class="max-w-xs hidden mb-4">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
+      <div>
+        <label>عدد الأقسام:</label>
+        <select id="sectionCount" class="w-full p-2 border rounded">
+          <option value="1">1</option>
+          <option value="4">4</option>
+          <option value="9">9</option>
+          <option value="16">16</option>
+          <option value="25">25</option>
+        </select>
+      </div>
+      <div>
+        <label>عدد الألوان:</label>
+        <input type="number" id="colorCount" value="10" min="2" max="50" class="w-full p-2 border rounded">
+      </div>
+      <div>
+        <label>عدد البكسلات (عرض × ارتفاع):</label>
+        <input type="number" id="gridSize" value="20" min="1" class="w-full p-2 border rounded">
+      </div>
+      <div>
+        <label>اختر اللون الثاني:</label>
+        <input type="color" id="color2" value="#000000" class="w-full h-10">
+      </div>
+    </div>
+    <button id="convertBtn" disabled class="bg-blue-600 text-white px-4 py-2 rounded">تحويل الصورة</button>
+    <div id="results" class="grid gap-4 mt-6"></div>
+  </div>
 
-<h3>النتائج:</h3>
-<p>
-- لكل قسم من الصورة، يتم عرض شبكة البكسل مع أرقام تمثل كل لون.<br>
-- جدول تحت كل صورة يحتوي على كود كل لون، رقمه، عدد مرات ظهوره، ونسبة الدمج مع الأبيض.<br>
-- يُظهر أيضًا عدد الألوان الإجمالي المستخدم في كل صورة.
-</p>
-
-<p><strong>ملاحظة:</strong> لا يمكنك تحويل نفس الصورة مرتين إلا بعد تحميل صورة جديدة.</p>
-Il est préférable que l'image soit carrée. Si vous utilisez un téléphone, activez le mode site pour ordinateur.
-</p>
-<div id="controls">
-  <input type="file" id="imageInput" accept="image/*"><br>
-  <img id="imagePreview" style="max-width:300px; display:none;">
-  <br>
-  <label>عدد الأقسام:</label>
-  <select id="sectionCount">
-    <option value="1">1</option>
-    <option value="4">4</option>
-    <option value="8">8</option>
-    <option value="16">16</option>
-  </select>
-  <br>
-  <label>عرض الشبكة:</label>
-  <input type="number" id="gridWidth" min="1" value="20">
-  <label>ارتفاع الشبكة:</label>
-  <input type="number" id="gridHeight" min="1" value="20">
-  <br><br>
-  <label>اختر اللون الثاني:</label>
-  <input type="color" id="color2" value="#000000">
-  <br>
-  <button id="convertBtn" disabled>تحويل الصورة باستخدام تدرج الأبيض واللون الثاني</button>
-</div><div id="results"></div><script>
-  let originalImage;
-  let blendMap = {};
-  let blockCounter = 1;
-  let hasConverted = false;
-
-  document.getElementById('imageInput').addEventListener('change', function (e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      originalImage = new Image();
-      originalImage.onload = function () {
-        document.getElementById('imagePreview').src = originalImage.src;
-        document.getElementById('imagePreview').style.display = 'block';
-        document.getElementById('convertBtn').disabled = false;
-        hasConverted = false;
-      };
-      originalImage.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  });
-
-  document.getElementById('convertBtn').addEventListener('click', function () {
-    if (hasConverted) return;
-    hasConverted = true;
-    this.disabled = true;
-
-    const gridWidth = parseInt(document.getElementById('gridWidth').value);
-    const gridHeight = parseInt(document.getElementById('gridHeight').value);
-    const sectionCount = parseInt(document.getElementById('sectionCount').value);
-
-    const white = [255, 255, 255];
-    const c2 = hexToRgb(document.getElementById('color2').value);
-    const palette = generateGradient(white, c2, 10);
-
-    blendMap = {};
-    palette.forEach((color, index) => {
-      const hex = rgbToHex(...color);
-      const percentWhite = ((9 - index) / 9 * 100).toFixed(0);
-      const percentColor = (100 - percentWhite);
-      blendMap[hex] = `${percentWhite}% أبيض + ${percentColor}% لون مختار`;
-    });
-
-    const sqrt = Math.sqrt(sectionCount);
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = originalImage.width;
-    canvas.height = originalImage.height;
-    ctx.drawImage(originalImage, 0, 0);
-
-    const sectionWidth = canvas.width / sqrt;
-    const sectionHeight = canvas.height / sqrt;
-
+  <script>
+    let originalImage;
+    const convertBtn = document.getElementById('convertBtn');
+    const imageInput = document.getElementById('imageInput');
+    const imagePreview = document.getElementById('imagePreview');
     const results = document.getElementById('results');
-    results.innerHTML = '';
-    blockCounter = 1;
 
-    const gridWrapper = document.createElement('div');
-    gridWrapper.className = 'gridWrapper';
-    gridWrapper.style.gridTemplateColumns = `repeat(${sqrt}, 1fr)`;
-
-    for (let i = 0; i < sqrt; i++) {
-      for (let j = 0; j < sqrt; j++) {
-        const x = j * sectionWidth;
-        const y = i * sectionHeight;
-
-        const imageData = ctx.getImageData(x, y, sectionWidth, sectionHeight);
-        const tempCanvas = document.createElement('canvas');
-        const tempCtx = tempCanvas.getContext('2d');
-        tempCanvas.width = sectionWidth;
-        tempCanvas.height = sectionHeight;
-        tempCtx.putImageData(imageData, 0, 0);
-
-        const partImage = new Image();
-        partImage.src = tempCanvas.toDataURL();
-
-        partImage.onload = function () {
-          const scaledCanvas = document.createElement('canvas');
-          const scaledCtx = scaledCanvas.getContext('2d');
-          scaledCanvas.width = gridWidth;
-          scaledCanvas.height = gridHeight;
-          scaledCtx.drawImage(partImage, 0, 0, gridWidth, gridHeight);
-
-          let pixels = [];
-          for (let y = 0; y < gridHeight; y++) {
-            for (let x = 0; x < gridWidth; x++) {
-              const data = scaledCtx.getImageData(x, y, 1, 1).data;
-              pixels.push([data[0], data[1], data[2]]);
-            }
-          }
-
-          const mappedPixels = pixels.map((px) => {
-            const closest = findClosestColor(px, palette);
-            return rgbToHex(...closest);
-          });
-
-          renderResult(gridWrapper, gridWidth, mappedPixels);
+    imageInput.addEventListener('change', function (e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        originalImage = new Image();
+        originalImage.onload = function () {
+          imagePreview.src = originalImage.src;
+          imagePreview.classList.remove('hidden');
+          convertBtn.disabled = false;
         };
-      }
+        originalImage.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function getContrastYIQ(hexcolor) {
+      hexcolor = hexcolor.replace('#', '');
+      const r = parseInt(hexcolor.substr(0, 2), 16);
+      const g = parseInt(hexcolor.substr(2, 2), 16);
+      const b = parseInt(hexcolor.substr(4, 2), 16);
+      const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+      return (yiq >= 128) ? '#000000' : '#FFFFFF';
     }
-    results.appendChild(gridWrapper);
+
+    function hexToRgb(hex) {
+      const bigint = parseInt(hex.replace('#', ''), 16);
+      return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
+    }
+
+    function rgbToHex(r, g, b) {
+      return "#" + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('').toUpperCase();
+    }
+
+    function generateGradient(c1, c2, steps) {
+      const result = [];
+      for (let i = 0; i < steps; i++) {
+        const ratio = i / (steps - 1);
+        const r = Math.round(c1[0] + (c2[0] - c1[0]) * ratio);
+        const g = Math.round(c1[1] + (c2[1] - c1[1]) * ratio);
+        const b = Math.round(c1[2] + (c2[2] - c1[2]) * ratio);
+        result.push([r, g, b]);
+      }
+      return result;
+    }
+
+    function findClosestColor(target, palette) {
+      let minDist = Infinity;
+      let closest = palette[0];
+      for (const color of palette) {
+        const dist = Math.sqrt(
+          (target[0] - color[0]) ** 2 +
+          (target[1] - color[1]) ** 2 +
+          (target[2] - color[2]) ** 2
+        );
+        if (dist < minDist) {
+          minDist = dist;
+          closest = color;
+        }
+      }
+      return closest;
+    }
+
+    convertBtn.addEventListener('click', async () => {
+      const gridSize = parseInt(document.getElementById('gridSize').value);
+      const colorCount = parseInt(document.getElementById('colorCount').value);
+      const sectionCount = parseInt(document.getElementById('sectionCount').value);
+      const color2 = hexToRgb(document.getElementById('color2').value);
+      const white = [255, 255, 255];
+      const palette = generateGradient(white, color2, colorCount);
+      const sqrt = Math.sqrt(sectionCount);
+
+      results.innerHTML = '';
+      results.style.gridTemplateColumns = `repeat(${sqrt}, 1fr)`;
+      results.style.display = 'grid';
+
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = originalImage.width;
+      canvas.height = originalImage.height;
+      ctx.drawImage(originalImage, 0, 0);
+
+      const sectionWidth = canvas.width / sqrt;
+      const sectionHeight = canvas.height / sqrt;
+
+      let blockCounter = 1;
+
+      const tasks = [];
+
+      for (let i = 0; i < sqrt; i++) {
+        for (let j = 0; j < sqrt; j++) {
+          tasks.push(new Promise((resolve) => {
+            const x = j * sectionWidth;
+            const y = i * sectionHeight;
+
+            const imageData = ctx.getImageData(x, y, sectionWidth, sectionHeight);
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCanvas.width = sectionWidth;
+            tempCanvas.height = sectionHeight;
+            tempCtx.putImageData(imageData, 0, 0);
+
+            const partImage = new Image();
+            partImage.onload = function () {
+              const scaledCanvas = document.createElement('canvas');
+              const scaledCtx = scaledCanvas.getContext('2d');
+              scaledCanvas.width = gridSize;
+              scaledCanvas.height = gridSize;
+              scaledCtx.drawImage(partImage, 0, 0, gridSize, gridSize);
+
+              const pixels = [];
+              for (let y = 0; y < gridSize; y++) {
+                for (let x = 0; x < gridSize; x++) {
+                  const data = scaledCtx.getImageData(x, y, 1, 1).data;
+                  pixels.push([data[0], data[1], data[2]]);
+                }
+              }
+
+              const pixelSize = sectionCount === 1 ? 28 :
+                                 sectionCount === 4 ? 18 :
+                                 sectionCount === 16 ? 10 :
+                                 sectionCount === 25 ? 5 : 20;
+
+              const wrapper = document.createElement('div');
+              wrapper.className = 'sectionWrapper';
+
+              const title = document.createElement('div');
+              title.className = 'font-bold text-sm mb-1';
+              title.textContent = `قسم ${blockCounter++}`;
+              wrapper.appendChild(title);
+
+              const container = document.createElement('div');
+              container.className = 'pixelContainer';
+              container.style.gridTemplateColumns = `repeat(${gridSize}, ${pixelSize}px)`;
+              container.style.gridTemplateRows = `repeat(${gridSize}, ${pixelSize}px)`;
+
+              pixels.forEach(px => {
+                const hex = rgbToHex(...findClosestColor(px, palette));
+                const div = document.createElement('div');
+                div.className = 'pixel';
+                div.style.width = div.style.height = pixelSize + 'px';
+                div.style.backgroundColor = hex;
+                div.style.fontSize = Math.max(4, Math.floor(pixelSize * 0.5)) + 'px';
+                div.style.color = getContrastYIQ(hex);
+                div.textContent = palette.indexOf(findClosestColor(px, palette)) + 1;
+                container.appendChild(div);
+              });
+
+              wrapper.appendChild(container);
+              results.appendChild(wrapper);
+              resolve();
+            };
+            partImage.src = tempCanvas.toDataURL();
+          }));
+        }
+      }
+
+      await Promise.all(tasks);
+  // حساب عدد تكرارات كل لون
+const colorUsage = new Map();
+document.querySelectorAll('.pixel').forEach(pixel => {
+  const bg = pixel.style.backgroundColor;
+  const hex = rgbToHex(...bg.match(/\d+/g).map(Number));
+  if (!colorUsage.has(hex)) colorUsage.set(hex, 0);
+  colorUsage.set(hex, colorUsage.get(hex) + 1);
+});
+
+// تحضير بيانات الألوان
+const allColors = new Map();
+palette.forEach((color, index) => {
+  const hex = rgbToHex(...color);
+  const percentWhite = ((palette.length - 1 - index) / (palette.length - 1) * 100).toFixed(0);
+  const percentColor = 100 - percentWhite;
+  allColors.set(hex, {
+    number: index + 1,
+    hex: hex,
+    mix: `${percentWhite}% أبيض + ${percentColor}% لون`,
+    count: colorUsage.get(hex) || 0
   });
+});
 
-  function renderResult(wrapper, gridWidth, pixels) {
-    const colorMap = new Map();
-    const container = document.createElement('div');
-    container.className = 'pixelContainer';
-    container.style.gridTemplateColumns = `repeat(${gridWidth}, 10px)`;
+// إنشاء العنوان
+const title = document.createElement('h2');
+title.textContent = 'جدول الألوان المستخدم';
+title.className = 'text-xl font-bold mt-10 mb-4 text-center';
+results.appendChild(title);
 
-    pixels.forEach((hex) => {
-      if (!colorMap.has(hex)) {
-        colorMap.set(hex, { number: colorMap.size + 1, count: 0 });
-      }
-      colorMap.get(hex).count++;
-      const colorData = colorMap.get(hex);
-      const div = document.createElement('div');
-      div.className = 'pixel';
-      div.style.backgroundColor = hex;
-      div.textContent = colorData.number;
-      container.appendChild(div);
+// إنشاء الجدول
+const table = document.createElement('table');
+table.className = 'min-w-full text-sm text-center border border-gray-300 shadow rounded overflow-hidden';
+
+// رأس الجدول
+table.innerHTML = `
+  <thead class="bg-gray-200">
+    <tr>
+      <th class="p-2 border">رقم</th>
+      <th class="p-2 border">اللون</th>
+      <th class="p-2 border">كود اللون</th>
+      <th class="p-2 border">الدمج</th>
+      <th class="p-2 border">عدد التكرارات</th>
+    </tr>
+  </thead>
+`;
+
+// جسم الجدول
+const tbody = document.createElement('tbody');
+allColors.forEach((data, hex) => {
+  const row = document.createElement('tr');
+  row.className = 'hover:bg-gray-50';
+  row.innerHTML = `
+    <td class="p-2 border">${data.number}</td>
+    <td class="p-2 border">
+      <div style="background:${data.hex}; width:20px; height:20px; border:1px solid #000; margin:auto;"></div>
+    </td>
+    <td class="p-2 border">${data.hex}</td>
+    <td class="p-2 border">${data.mix}</td>
+    <td class="p-2 border">${data.count}</td>
+  `;
+  tbody.appendChild(row);
+});
+
+table.appendChild(tbody);
+results.appendChild(table);
     });
-
-    const table = document.createElement('table');
-    const thead = document.createElement('thead');
-    thead.innerHTML = `<tr><th>رقم</th><th>كود اللون</th><th>عدد البكسلات</th><th>الدمج</th></tr>`;
-    const tbody = document.createElement('tbody');
-
-    [...colorMap.entries()].forEach(([hex, data]) => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${data.number}</td><td>${hex}</td><td>${data.count}</td><td>${blendMap[hex]}</td>`;
-      tbody.appendChild(tr);
-    });
-
-    const totalColorsRow = document.createElement('tr');
-    totalColorsRow.innerHTML = `<td colspan="4"><strong>عدد الألوان في الصورة: ${colorMap.size}</strong></td>`;
-    tbody.appendChild(totalColorsRow);
-
-    table.appendChild(thead);
-    table.appendChild(tbody);
-
-    const block = document.createElement('div');
-    block.className = 'resultBlock';
-    const title = document.createElement('h3');
-    title.textContent = `صورة رقم ${blockCounter++}`;
-    block.appendChild(title);
-    block.appendChild(container);
-    block.appendChild(table);
-
-    wrapper.appendChild(block);
-  }
-
-  function rgbToHex(r, g, b) {
-    return "#" + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('').toUpperCase();
-  }
-
-  function hexToRgb(hex) {
-    const bigint = parseInt(hex.replace('#', ''), 16);
-    return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
-  }
-
-  function generateGradient(c1, c2, steps) {
-    const result = [];
-    for (let i = 0; i < steps; i++) {
-      const ratio = i / (steps - 1);
-      const r = Math.round(c1[0] + (c2[0] - c1[0]) * ratio);
-      const g = Math.round(c1[1] + (c2[1] - c1[1]) * ratio);
-      const b = Math.round(c1[2] + (c2[2] - c1[2]) * ratio);
-      result.push([r, g, b]);
-    }
-    return result;
-  }
-
-  function findClosestColor(target, palette) {
-    let minDist = Infinity;
-    let closest = palette[0];
-    for (const color of palette) {
-      const dist = Math.sqrt(
-        (target[0] - color[0]) ** 2 +
-        (target[1] - color[1]) ** 2 +
-        (target[2] - color[2]) ** 2
-      );
-      if (dist < minDist) {
-        minDist = dist;
-        closest = color;
-      }
-    }
-    return closest;
-  }
-</script></body>
+  </script>
+</body>
 </html>
